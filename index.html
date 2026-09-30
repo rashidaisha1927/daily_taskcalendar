@@ -1,0 +1,4714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>My Daily Task Calendar</title>
+
+<style>
+
+/* =========================================================
+   1. COLORS / THEME
+========================================================= */
+
+:root {
+    --bg: #fce7f3; /* Baby Pink Background */
+
+    --surface: #ffffff;
+    --surface2: #f9fafb;
+
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+
+    --primary: #4f46e5;
+    --primary2: #4338ca;
+    --soft: #eef2ff;
+
+    --success: #15803d;
+    --successbg: #f0fdf4;
+
+    --danger: #dc2626;
+    --dangerbg: #fef2f2;
+
+    --warning: #b45309;
+    --warningbg: #fffbeb;
+
+    --shadow:
+        0 5px 20px rgba(17, 24, 39, 0.06);
+}
+
+
+/* Dark Mode */
+
+body.dark {
+    --bg: #111318;
+
+    --surface: #191c23;
+    --surface2: #20232b;
+
+    --text: #f3f4f6;
+    --muted: #9ca3af;
+    --border: #2d313a;
+
+    --primary: #818cf8;
+    --primary2: #6366f1;
+    --soft: #252844;
+
+    --success: #4ade80;
+    --successbg: #183125;
+
+    --danger: #f87171;
+    --dangerbg: #382126;
+
+    --warning: #fbbf24;
+    --warningbg: #382f1b;
+
+    --shadow:
+        0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+/* =========================================================
+   2. BASIC STYLES
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: var(--bg);
+    color: var(--text);
+
+    min-height: 100vh;
+
+    transition:
+        background 0.25s,
+        color 0.25s;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app {
+    width: min(1400px, 94%);
+    margin: auto;
+
+    padding:
+        30px 0
+        50px;
+}
+
+
+/* =========================================================
+   3. HEADER
+========================================================= */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    margin-bottom: 25px;
+}
+
+.header h1 {
+    font-size:
+        clamp(
+            24px,
+            3vw,
+            32px
+        );
+}
+
+.header p,
+.muted {
+    color: var(--muted);
+
+    font-size: 13px;
+
+    margin-top: 4px;
+}
+
+
+/* =========================================================
+   4. BUTTONS
+========================================================= */
+
+.theme,
+.secondary,
+.cal-nav button {
+    border:
+        1px solid
+        var(--border);
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+    border-radius: 9px;
+
+    padding:
+        9px 13px;
+
+    transition: 0.2s;
+}
+
+.theme:hover,
+.secondary:hover,
+.cal-nav button:hover {
+    background:
+        var(--soft);
+
+    color:
+        var(--primary);
+}
+
+.primary {
+    border: none;
+
+    background:
+        var(--primary);
+
+    color: white;
+
+    border-radius: 9px;
+
+    padding:
+        10px 14px;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.primary:hover {
+    background:
+        var(--primary2);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   5. DASHBOARD
+========================================================= */
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 14px;
+
+    margin:
+        15px 0;
+}
+
+.card,
+.panel,
+.filters-wrap,
+.progress-card {
+    background:
+        var(--surface);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 15px;
+
+    box-shadow:
+        var(--shadow);
+}
+
+.card {
+    padding: 17px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform:
+        translateY(-2px);
+}
+
+.icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+
+    background:
+        var(--soft);
+
+    display: grid;
+    place-items: center;
+
+    font-size: 18px;
+}
+
+.card small {
+    color:
+        var(--muted);
+}
+
+.card h3 {
+    font-size: 23px;
+
+    margin-top: 2px;
+}
+
+
+/* =========================================================
+   6. PROGRESS
+========================================================= */
+
+.progress-card {
+    padding: 17px;
+}
+
+.progress-top {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+}
+
+.progress-track {
+    height: 8px;
+
+    background:
+        var(--surface2);
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    margin-top: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+
+    width: 0;
+
+    background:
+        var(--primary);
+
+    transition:
+        width 0.3s;
+}
+
+
+/* =========================================================
+   7. NAVIGATION
+========================================================= */
+
+.nav {
+    display: flex;
+
+    gap: 6px;
+
+    overflow-x: auto;
+
+    margin:
+        23px 0
+        16px;
+}
+
+.nav button {
+    border: none;
+
+    background:
+        transparent;
+
+    color:
+        var(--muted);
+
+    padding:
+        9px 13px;
+
+    border-radius: 9px;
+
+    white-space: nowrap;
+
+    transition: 0.2s;
+}
+
+.nav button:hover {
+    background:
+        var(--soft);
+
+    color:
+        var(--primary);
+}
+
+.nav button.active {
+    background:
+        var(--primary);
+
+    color:
+        white;
+}
+
+.count {
+    background:
+        var(--surface2);
+
+    padding:
+        2px 6px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    margin-left: 4px;
+}
+
+.active .count {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.2
+        );
+}
+
+
+/* =========================================================
+   8. SEARCH + FILTERS
+========================================================= */
+
+.filters-wrap {
+    padding: 14px;
+
+    margin-bottom: 18px;
+}
+
+.search {
+    display: flex;
+
+    gap: 8px;
+
+    align-items: center;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 9px;
+
+    padding:
+        0 11px;
+
+    margin-bottom: 10px;
+}
+
+.search input {
+    height: 42px;
+
+    flex: 1;
+
+    border: none;
+    outline: none;
+
+    background:
+        transparent;
+
+    color:
+        var(--text);
+}
+
+.filters {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr)
+        auto;
+
+    gap: 9px;
+}
+
+.filters select,
+.filters input,
+.form-group input,
+.form-group select,
+.form-group textarea {
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 8px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+    padding: 10px;
+
+    outline: none;
+}
+
+.filters select:focus,
+.filters input:focus,
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color:
+        var(--primary);
+
+    box-shadow:
+        0 0 0 3px
+        var(--soft);
+}
+
+
+/* =========================================================
+   9. CALENDAR LAYOUT
+========================================================= */
+
+.main {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(300px, 1fr);
+
+    gap: 18px;
+}
+
+.panel {
+    padding: 20px;
+}
+
+.cal-head {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 16px;
+}
+
+.cal-nav {
+    display: flex;
+
+    gap: 6px;
+}
+
+.cal-nav button {
+    width: 36px;
+    height: 36px;
+
+    padding: 0;
+}
+
+
+/* =========================================================
+   10. CALENDAR DAYS
+========================================================= */
+
+.week,
+.days {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 5px;
+}
+
+.week div {
+    text-align: center;
+
+    color:
+        var(--muted);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    padding: 8px;
+}
+
+.day {
+    position: relative;
+
+    min-height: 75px;
+
+    padding: 8px;
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.day:hover {
+    background:
+        var(--surface2);
+
+    border-color:
+        var(--border);
+}
+
+.day.today {
+    background:
+        var(--soft);
+
+    color:
+        var(--primary);
+
+    font-weight: 700;
+}
+
+.day.selected {
+    border-color:
+        var(--primary);
+
+    box-shadow:
+        inset 0 0 0 1px
+        var(--primary);
+}
+
+.day.empty {
+    cursor: default;
+}
+
+
+/* Task dots */
+
+.dots {
+    position: absolute;
+
+    bottom: 7px;
+    left: 8px;
+
+    display: flex;
+
+    gap: 3px;
+}
+
+.dot {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background:
+        var(--primary);
+}
+
+
+/* =========================================================
+   11. TASK PANEL
+========================================================= */
+
+.task-head,
+.list-head {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    margin-bottom: 16px;
+}
+
+.task-head h2,
+.list-head h2 {
+    font-size: 18px;
+}
+
+.label {
+    font-size: 10px;
+
+    color:
+        var(--muted);
+
+    font-weight: 700;
+
+    letter-spacing: 0.7px;
+}
+
+.daily-progress {
+    margin-bottom: 17px;
+}
+
+.daily-info {
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    color:
+        var(--muted);
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   12. TASK CARDS
+========================================================= */
+
+.task {
+    display: flex;
+
+    gap: 10px;
+
+    align-items:
+        flex-start;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 11px;
+
+    padding: 13px;
+
+    margin-bottom: 10px;
+
+    background:
+        var(--surface);
+
+    transition: 0.2s;
+}
+
+.task:hover {
+    box-shadow:
+        var(--shadow);
+
+    transform:
+        translateY(-1px);
+}
+
+.task.completed {
+    background:
+        var(--surface2);
+
+    opacity: 0.72;
+}
+
+.task.completed
+.task-title {
+    text-decoration:
+        line-through;
+
+    color:
+        var(--muted);
+}
+
+.check {
+    width: 17px;
+    height: 17px;
+
+    margin-top: 2px;
+
+    accent-color:
+        var(--primary);
+}
+
+.task-body {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.task-title {
+    font-size: 14px;
+}
+
+.desc {
+    font-size: 12px;
+
+    color:
+        var(--muted);
+
+    line-height: 1.5;
+
+    margin:
+        5px 0
+        8px;
+}
+
+.date-label {
+    font-size: 11px;
+
+    color:
+        var(--muted);
+
+    font-weight: 600;
+
+    margin-bottom: 6px;
+}
+
+
+/* =========================================================
+   13. BADGES
+========================================================= */
+
+.badges {
+    display: flex;
+
+    gap: 5px;
+
+    flex-wrap: wrap;
+}
+
+.badge {
+    font-size: 10px;
+
+    font-weight: 600;
+
+    padding:
+        4px 8px;
+
+    border-radius: 20px;
+
+    background:
+        var(--surface2);
+
+    color:
+        var(--muted);
+}
+
+
+/* Priority */
+
+.high {
+    background:
+        var(--dangerbg);
+
+    color:
+        var(--danger);
+}
+
+.medium {
+    background:
+        var(--warningbg);
+
+    color:
+        var(--warning);
+}
+
+.low {
+    background:
+        var(--successbg);
+
+    color:
+        var(--success);
+}
+
+
+/* Recurring */
+
+.repeat {
+    background:
+        var(--soft);
+
+    color:
+        var(--primary);
+}
+
+
+/* =========================================================
+   14. EDIT / DELETE
+========================================================= */
+
+.actions {
+    display: flex;
+
+    gap: 5px;
+}
+
+.actions button {
+    border: none;
+
+    background:
+        var(--surface2);
+
+    color:
+        var(--muted);
+
+    padding:
+        6px 8px;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+}
+
+.actions button:hover {
+    background:
+        var(--soft);
+
+    color:
+        var(--primary);
+}
+
+.actions .delete:hover {
+    background:
+        var(--dangerbg);
+
+    color:
+        var(--danger);
+}
+
+
+/* =========================================================
+   15. EMPTY STATE
+========================================================= */
+
+.empty {
+    text-align: center;
+
+    color:
+        var(--muted);
+
+    padding:
+        35px 12px;
+}
+
+.empty strong {
+    display: block;
+
+    color:
+        var(--text);
+
+    margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   16. LIST VIEW
+========================================================= */
+
+.list-view {
+    display: none;
+}
+
+
+/* =========================================================
+   17. MODAL
+========================================================= */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(
+            15,
+            23,
+            42,
+            0.48
+        );
+
+    backdrop-filter:
+        blur(3px);
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 10;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-box {
+    width:
+        min(
+            520px,
+            100%
+        );
+
+    max-height: 92vh;
+
+    overflow: auto;
+
+    background:
+        var(--surface);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 25px 60px
+        rgba(
+            0,
+            0,
+            0,
+            0.22
+        );
+}
+
+.modal-title {
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+}
+
+.modal-title button {
+    border: none;
+
+    background:
+        var(--surface2);
+
+    color:
+        var(--text);
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   18. FORM
+========================================================= */
+
+.form-group {
+    margin-bottom: 13px;
+}
+
+.form-group label {
+    display: block;
+
+    color:
+        var(--muted);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+}
+
+.form-group textarea {
+    min-height: 80px;
+
+    resize: vertical;
+}
+
+.form-row {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 11px;
+}
+
+.form-actions {
+    display: flex;
+
+    justify-content:
+        flex-end;
+
+    gap: 8px;
+
+    margin-top: 18px;
+}
+
+
+/* =========================================================
+   19. RESPONSIVE DESIGN
+========================================================= */
+
+@media (
+    max-width: 950px
+) {
+
+    .stats {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .filters {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+
+@media (
+    max-width: 800px
+) {
+
+    .main {
+        grid-template-columns:
+            1fr;
+    }
+}
+
+
+@media (
+    max-width: 550px
+) {
+
+    .app {
+        padding-top: 18px;
+    }
+
+    .theme span:last-child {
+        display: none;
+    }
+
+    .stats {
+        gap: 8px;
+    }
+
+    .card {
+        padding: 12px;
+    }
+
+    .filters {
+        grid-template-columns:
+            1fr;
+    }
+
+    .panel {
+        padding: 14px;
+    }
+
+    .week,
+    .days {
+        gap: 2px;
+    }
+
+    .day {
+        min-height: 52px;
+
+        padding: 6px;
+
+        font-size: 12px;
+    }
+
+    .task {
+        flex-wrap: wrap;
+    }
+
+    .actions {
+        width: 100%;
+
+        justify-content:
+            flex-end;
+
+        padding-left: 27px;
+    }
+
+    .form-row {
+        grid-template-columns:
+            1fr;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="header">
+
+    <div>
+        <h1>My Task Calendar</h1>
+
+        <p>
+            Plan your day and stay productive.
+        </p>
+    </div>
+
+
+    <button
+        class="theme"
+        id="themeBtn"
+    >
+
+        <span id="themeIcon">
+            ☾
+        </span>
+
+        <span id="themeText">
+            Dark
+        </span>
+
+    </button>
+
+</header>
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section>
+
+    <div>
+
+        <h2>
+            Dashboard
+        </h2>
+
+        <p class="muted">
+            Your task overview at a glance.
+        </p>
+
+    </div>
+
+
+    <div class="stats">
+
+
+        <div class="card">
+
+            <div class="icon">
+                📅
+            </div>
+
+            <div>
+
+                <small>
+                    Today's Tasks
+                </small>
+
+                <h3 id="statToday">
+                    0
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">
+                ⏳
+            </div>
+
+            <div>
+
+                <small>
+                    Pending Tasks
+                </small>
+
+                <h3 id="statPending">
+                    0
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">
+                ✓
+            </div>
+
+            <div>
+
+                <small>
+                    Completed Tasks
+                </small>
+
+                <h3 id="statCompleted">
+                    0
+                </h3>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="icon">
+                !
+            </div>
+
+            <div>
+
+                <small>
+                    High Priority
+                </small>
+
+                <h3 id="statHigh">
+                    0
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Today's progress -->
+
+    <div class="progress-card">
+
+        <div class="progress-top">
+
+            <div>
+
+                <strong>
+                    Today's Progress
+                </strong>
+
+                <p
+                    class="muted"
+                    id="todayProgressText"
+                >
+                    0 of 0 tasks completed
+                </p>
+
+            </div>
+
+
+            <strong id="todayPercent">
+                0%
+            </strong>
+
+        </div>
+
+
+        <div class="progress-track">
+
+            <div
+                class="progress-fill"
+                id="todayFill"
+            ></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav
+    class="nav"
+    id="nav"
+>
+
+    <button
+        class="active"
+        data-view="calendar"
+    >
+        📅 Calendar
+    </button>
+
+
+    <button
+        data-view="today"
+    >
+        Today
+    </button>
+
+
+    <button
+        data-view="all"
+    >
+        All Tasks
+    </button>
+
+
+    <button
+        data-view="pending"
+    >
+
+        Pending
+
+        <span
+            class="count"
+            id="pendingCount"
+        >
+            0
+        </span>
+
+    </button>
+
+
+    <button
+        data-view="completed"
+    >
+
+        Completed
+
+        <span
+            class="count"
+            id="completedCount"
+        >
+            0
+        </span>
+
+    </button>
+
+</nav>
+
+
+<!-- =====================================================
+     SEARCH AND FILTERS
+===================================================== -->
+
+<section class="filters-wrap">
+
+    <div class="search">
+
+        🔍
+
+        <input
+            id="search"
+            placeholder="Search tasks by title..."
+        >
+
+    </div>
+
+
+    <div class="filters">
+
+
+        <select id="categoryFilter">
+
+            <option value="">
+                All Categories
+            </option>
+
+            <option>
+                Work
+            </option>
+
+            <option>
+                Personal
+            </option>
+
+            <option>
+                Study
+            </option>
+
+            <option>
+                Health
+            </option>
+
+            <option>
+                Other
+            </option>
+
+        </select>
+
+
+        <select id="priorityFilter">
+
+            <option value="">
+                All Priorities
+            </option>
+
+            <option>
+                Low
+            </option>
+
+            <option>
+                Medium
+            </option>
+
+            <option>
+                High
+            </option>
+
+        </select>
+
+
+        <select id="statusFilter">
+
+            <option value="">
+                All Statuses
+            </option>
+
+            <option value="pending">
+                Pending
+            </option>
+
+            <option value="completed">
+                Completed
+            </option>
+
+        </select>
+
+
+        <input
+            type="date"
+            id="dateFilter"
+        >
+
+
+        <button
+            class="secondary"
+            id="clearFilters"
+        >
+            Clear Filters
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CALENDAR VIEW
+===================================================== -->
+
+<main
+    class="main"
+    id="calendarView"
+>
+
+
+<!-- Calendar -->
+
+<section class="panel">
+
+    <div class="cal-head">
+
+        <h2 id="monthTitle"></h2>
+
+
+        <div class="cal-nav">
+
+            <button id="prev">
+                ‹
+            </button>
+
+            <button id="next">
+                ›
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="week">
+
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+
+    </div>
+
+
+    <div
+        class="days"
+        id="days"
+    ></div>
+
+</section>
+
+
+<!-- Selected Date Tasks -->
+
+<section class="panel">
+
+    <div class="task-head">
+
+        <div>
+
+            <div class="label">
+                SELECTED DATE
+            </div>
+
+            <h2 id="selectedHeading">
+            </h2>
+
+        </div>
+
+
+        <button
+            class="primary"
+            id="addBtn"
+        >
+            + Add Task
+        </button>
+
+    </div>
+
+
+    <!-- Daily Progress -->
+
+    <div class="daily-progress">
+
+        <div class="daily-info">
+
+            <span id="dailyText">
+                0 of 0 tasks completed
+            </span>
+
+            <strong id="dailyPercent">
+                0%
+            </strong>
+
+        </div>
+
+
+        <div class="progress-track">
+
+            <div
+                class="progress-fill"
+                id="dailyFill"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <div id="taskList"></div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================================
+     LIST VIEW
+===================================================== -->
+
+<section
+    class="panel list-view"
+    id="listView"
+>
+
+    <div class="list-head">
+
+        <div>
+
+            <h2 id="listTitle">
+                All Tasks
+            </h2>
+
+            <p
+                class="muted"
+                id="listDesc"
+            ></p>
+
+        </div>
+
+
+        <button
+            class="primary"
+            id="listAddBtn"
+        >
+            + Add Task
+        </button>
+
+    </div>
+
+
+    <div id="listTasks"></div>
+
+</section>
+
+
+</div>
+
+
+<!-- =====================================================
+     ADD / EDIT TASK MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="modal"
+>
+
+<div class="modal-box">
+
+
+    <div class="modal-title">
+
+        <h2 id="modalTitle">
+            Add New Task
+        </h2>
+
+        <button id="closeModal">
+            ✕
+        </button>
+
+    </div>
+
+
+    <form id="taskForm">
+
+
+        <!-- Task title -->
+
+        <div class="form-group">
+
+            <label>
+                Task Title
+            </label>
+
+            <input
+                id="title"
+                maxlength="100"
+                required
+                placeholder="What do you need to do?"
+            >
+
+        </div>
+
+
+        <!-- Description -->
+
+        <div class="form-group">
+
+            <label>
+                Description
+            </label>
+
+            <textarea
+                id="description"
+                maxlength="500"
+                placeholder="Add some details..."
+            ></textarea>
+
+        </div>
+
+
+        <!-- Date and Time -->
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label>
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="taskDate"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Time
+                </label>
+
+                <input
+                    type="time"
+                    id="time"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- Category and Priority -->
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label>
+                    Category
+                </label>
+
+                <select id="category">
+
+                    <option>
+                        Work
+                    </option>
+
+                    <option>
+                        Personal
+                    </option>
+
+                    <option>
+                        Study
+                    </option>
+
+                    <option>
+                        Health
+                    </option>
+
+                    <option>
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Priority
+                </label>
+
+                <select id="priority">
+
+                    <option>
+                        Low
+                    </option>
+
+                    <option selected>
+                        Medium
+                    </option>
+
+                    <option>
+                        High
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- Repeat -->
+
+        <div class="form-group">
+
+            <label>
+                Repeat
+            </label>
+
+            <select id="repeat">
+
+                <option value="none">
+                    Does not repeat
+                </option>
+
+                <option value="daily">
+                    Daily
+                </option>
+
+                <option value="weekly">
+                    Weekly
+                </option>
+
+                <option value="monthly">
+                    Monthly
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Buttons -->
+
+        <div class="form-actions">
+
+            <button
+                type="button"
+                class="secondary"
+                id="cancel"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                type="submit"
+                class="primary"
+                id="saveBtn"
+            >
+                Save Task
+            </button>
+
+        </div>
+
+
+    </form>
+
+</div>
+</div>
+
+
+<script>
+
+/* =========================================================
+   1. HELPER FUNCTIONS
+========================================================= */
+
+/*
+    Short helper.
+
+    Instead of writing:
+    document.getElementById("title")
+
+    we can write:
+    $("title")
+*/
+
+const $ =
+    id =>
+        document.getElementById(id);
+
+
+/*
+    Current date when the app loads.
+*/
+
+const now =
+    new Date();
+
+
+/*
+    Add a zero before numbers smaller than 10.
+
+    Example:
+    5 -> 05
+*/
+
+const pad =
+    number =>
+        String(number)
+            .padStart(
+                2,
+                "0"
+            );
+
+
+/*
+    Convert a Date object into:
+
+    YYYY-MM-DD
+
+    Example:
+    2026-09-29
+*/
+
+function dateString(date) {
+
+    return (
+        date.getFullYear()
+        + "-"
+        + pad(
+            date.getMonth() + 1
+        )
+        + "-"
+        + pad(
+            date.getDate()
+        )
+    );
+}
+
+
+/*
+    Convert YYYY-MM-DD into
+    a JavaScript Date.
+*/
+
+function parseDate(
+    value
+) {
+
+    return new Date(
+        value +
+        "T00:00:00"
+    );
+}
+
+
+/*
+    Always return today's current date.
+*/
+
+function today() {
+
+    return dateString(
+        new Date()
+    );
+}
+
+
+/*
+    Generate a simple unique ID
+    for every task.
+*/
+
+function makeId() {
+
+    return (
+        Date.now()
+            .toString(36)
+
+        +
+
+        Math.random()
+            .toString(36)
+            .slice(2)
+    );
+}
+
+
+/*
+    Convert date into readable text.
+
+    Example:
+
+    2026-09-29
+
+    becomes
+
+    Tuesday, September 29, 2026
+*/
+
+function readable(
+    value
+) {
+
+    return parseDate(
+        value
+    ).toLocaleDateString(
+        "en-US",
+        {
+            weekday:
+                "long",
+
+            month:
+                "long",
+
+            day:
+                "numeric",
+
+            year:
+                "numeric"
+        }
+    );
+}
+
+
+/* =========================================================
+   2. APP STATE
+========================================================= */
+
+let currentMonth =
+    now.getMonth();
+
+let currentYear =
+    now.getFullYear();
+
+
+/*
+    The calendar starts with
+    today selected.
+*/
+
+let selectedDate =
+    today();
+
+
+/*
+    Current page/view.
+*/
+
+let currentView =
+    "calendar";
+
+
+/*
+    If editing is null,
+    we are creating a task.
+
+    Otherwise it contains
+    the task being edited.
+*/
+
+let editing =
+    null;
+
+
+/* =========================================================
+   3. LOCAL STORAGE
+========================================================= */
+
+/*
+    Load tasks saved in the browser.
+
+    localStorage keeps tasks even
+    after the page is refreshed.
+*/
+
+function loadTasks() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                "dailyTaskCalendarTasks"
+            );
+
+
+        const data =
+            JSON.parse(
+                saved || "[]"
+            );
+
+
+        if (
+            !Array.isArray(data)
+        ) {
+
+            return [];
+        }
+
+
+        /*
+            Normalize old saved tasks.
+
+            This makes older task data
+            compatible with newer features.
+        */
+
+        return data.map(
+            task => ({
+
+                id:
+                    task.id ||
+                    makeId(),
+
+                title:
+                    task.title ||
+                    "Untitled Task",
+
+                description:
+                    task.description ||
+                    "",
+
+                date:
+                    task.date ||
+                    today(),
+
+                time:
+                    task.time ||
+                    "09:00",
+
+                category:
+                    task.category ||
+                    "Other",
+
+                priority:
+                    task.priority ||
+                    "Medium",
+
+                repeat:
+                    task.repeat ||
+                    "none",
+
+                completed:
+                    task.completed ===
+                    true,
+
+                completedDates:
+                    Array.isArray(
+                        task.completedDates
+                    )
+                    ? task.completedDates
+                    : []
+
+            }));
+
+    } catch (error) {
+
+        console.error(
+            "Unable to load tasks:",
+            error
+        );
+
+        return [];
+    }
+}
+
+
+/*
+    Main task array.
+*/
+
+let tasks =
+    loadTasks();
+
+
+/*
+    Save all tasks.
+*/
+
+function saveTasks() {
+
+    localStorage.setItem(
+
+        "dailyTaskCalendarTasks",
+
+        JSON.stringify(
+            tasks
+        )
+    );
+}
+
+
+/* =========================================================
+   4. RECURRING TASKS
+========================================================= */
+
+/*
+    Check whether a task should
+    appear on a particular date.
+*/
+
+function occurs(
+    task,
+    date
+) {
+
+    const start =
+        parseDate(
+            task.date
+        );
+
+
+    const target =
+        parseDate(
+            date
+        );
+
+
+    /*
+        A recurring task cannot occur
+        before its original start date.
+    */
+
+    if (
+        target < start
+    ) {
+
+        return false;
+    }
+
+
+    /* Daily */
+
+    if (
+        task.repeat ===
+        "daily"
+    ) {
+
+        return true;
+    }
+
+
+    /* Weekly */
+
+    if (
+        task.repeat ===
+        "weekly"
+    ) {
+
+        return (
+            target.getDay() ===
+            start.getDay()
+        );
+    }
+
+
+    /* Monthly */
+
+    if (
+        task.repeat ===
+        "monthly"
+    ) {
+
+        return (
+            target.getDate() ===
+            start.getDate()
+        );
+    }
+
+
+    /* Normal task */
+
+    return (
+        task.date ===
+        date
+    );
+}
+
+
+/*
+    Check if a task occurrence
+    has been completed.
+*/
+
+function isDone(
+    task,
+    date
+) {
+
+    /*
+        Normal task has one
+        completed value.
+    */
+
+    if (
+        task.repeat ===
+        "none"
+    ) {
+
+        return task.completed;
+    }
+
+
+    /*
+        Recurring tasks have separate
+        completed dates.
+
+        This means completing today's
+        daily task does NOT automatically
+        complete tomorrow's task.
+    */
+
+    return (
+        task.completedDates ||
+        []
+    ).includes(
+        date
+    );
+}
+
+
+/*
+    Create a task occurrence.
+
+    The original task remains saved
+    inside originalTask.
+*/
+
+function occurrence(
+    task,
+    date
+) {
+
+    return {
+
+        ...task,
+
+        date:
+            date,
+
+        occurrenceDate:
+            date,
+
+        completed:
+            isDone(
+                task,
+                date
+            ),
+
+        originalTask:
+            task
+    };
+}
+
+
+/*
+    Get all tasks that should
+    appear on one date.
+*/
+
+function tasksForDate(
+    date
+) {
+
+    return tasks
+
+        .filter(
+            task =>
+                occurs(
+                    task,
+                    date
+                )
+        )
+
+        .map(
+            task =>
+                occurrence(
+                    task,
+                    date
+                )
+        );
+}
+
+
+/*
+    Recurring tasks could continue forever.
+
+    Therefore All Tasks / Pending Tasks
+    show recurring occurrences for
+    the next 90 days.
+
+    Normal one-time tasks are always
+    included.
+*/
+
+function rangeOccurrences(
+    days = 90
+) {
+
+    const map =
+        new Map();
+
+
+    const start =
+        parseDate(
+            today()
+        );
+
+
+    for (
+        let i = 0;
+        i < days;
+        i++
+    ) {
+
+        const date =
+            new Date(
+
+                start.getFullYear(),
+
+                start.getMonth(),
+
+                start.getDate()
+                + i
+            );
+
+
+        const value =
+            dateString(
+                date
+            );
+
+
+        tasksForDate(
+            value
+        ).forEach(
+            task => {
+
+                map.set(
+
+                    task.id
+                    + "|"
+                    + task.date,
+
+                    task
+                );
+            }
+        );
+    }
+
+
+    /*
+        Include normal tasks outside
+        the 90-day window.
+    */
+
+    tasks
+
+        .filter(
+            task =>
+                task.repeat ===
+                "none"
+        )
+
+        .forEach(
+            task => {
+
+                map.set(
+
+                    task.id
+                    + "|"
+                    + task.date,
+
+                    occurrence(
+                        task,
+                        task.date
+                    )
+                );
+            }
+        );
+
+
+    return [
+        ...map.values()
+    ];
+}
+
+
+/*
+    Return all completed occurrences.
+
+    This also includes completed
+    recurring tasks from previous dates.
+*/
+
+function completedOccurrences() {
+
+    const result = [];
+
+
+    tasks.forEach(
+        task => {
+
+            if (
+                task.repeat ===
+                "none"
+            ) {
+
+                if (
+                    task.completed
+                ) {
+
+                    result.push(
+
+                        occurrence(
+                            task,
+                            task.date
+                        )
+                    );
+                }
+
+                return;
+            }
+
+
+            (
+                task.completedDates ||
+                []
+            ).forEach(
+                date => {
+
+                    if (
+                        occurs(
+                            task,
+                            date
+                        )
+                    ) {
+
+                        result.push(
+
+                            occurrence(
+                                task,
+                                date
+                            )
+                        );
+                    }
+                }
+            );
+        }
+    );
+
+
+    return result;
+}
+
+
+/* =========================================================
+   5. SEARCH AND FILTERS
+========================================================= */
+
+function filters(
+    taskArray
+) {
+
+    const search =
+        $("search")
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    const category =
+        $("categoryFilter")
+            .value;
+
+
+    const priority =
+        $("priorityFilter")
+            .value;
+
+
+    const status =
+        $("statusFilter")
+            .value;
+
+
+    const date =
+        $("dateFilter")
+            .value;
+
+
+    return taskArray.filter(
+        task => {
+
+
+            const matchesSearch =
+
+                !search
+
+                ||
+
+                task.title
+                    .toLowerCase()
+                    .includes(
+                        search
+                    );
+
+
+            const matchesCategory =
+
+                !category
+
+                ||
+
+                task.category ===
+                category;
+
+
+            const matchesPriority =
+
+                !priority
+
+                ||
+
+                task.priority ===
+                priority;
+
+
+            const matchesDate =
+
+                !date
+
+                ||
+
+                task.date ===
+                date;
+
+
+            let matchesStatus =
+                true;
+
+
+            if (
+                status ===
+                "completed"
+            ) {
+
+                matchesStatus =
+                    task.completed;
+            }
+
+
+            if (
+                status ===
+                "pending"
+            ) {
+
+                matchesStatus =
+                    !task.completed;
+            }
+
+
+            return (
+
+                matchesSearch
+
+                &&
+
+                matchesCategory
+
+                &&
+
+                matchesPriority
+
+                &&
+
+                matchesDate
+
+                &&
+
+                matchesStatus
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   6. SORT TASKS
+========================================================= */
+
+function sortTasks(
+    a,
+    b
+) {
+
+    const dateCompare =
+        a.date.localeCompare(
+            b.date
+        );
+
+
+    if (
+        dateCompare !== 0
+    ) {
+
+        return dateCompare;
+    }
+
+
+    return (
+        a.time || ""
+    ).localeCompare(
+        b.time || ""
+    );
+}
+
+
+/* =========================================================
+   7. FORMAT TIME
+========================================================= */
+
+function formatTime(
+    time
+) {
+
+    if (!time) {
+
+        return "No time";
+    }
+
+
+    let [
+        hour,
+        minute
+    ] =
+        time.split(":");
+
+
+    hour =
+        Number(hour);
+
+
+    const suffix =
+        hour >= 12
+        ? "PM"
+        : "AM";
+
+
+    hour =
+        hour % 12 || 12;
+
+
+    return (
+        hour
+        + ":"
+        + minute
+        + " "
+        + suffix
+    );
+}
+
+
+/* =========================================================
+   8. RENDER CALENDAR
+========================================================= */
+
+function renderCalendar() {
+
+    $("days").innerHTML =
+        "";
+
+
+    /*
+        Show current month title.
+    */
+
+    $("monthTitle")
+        .textContent =
+
+        new Date(
+            currentYear,
+            currentMonth,
+            1
+        ).toLocaleDateString(
+            "en-US",
+            {
+                month:
+                    "long",
+
+                year:
+                    "numeric"
+            }
+        );
+
+
+    /*
+        Find which weekday the month
+        starts on.
+    */
+
+    const firstDay =
+
+        new Date(
+            currentYear,
+            currentMonth,
+            1
+        ).getDay();
+
+
+    /*
+        Find number of days
+        in this month.
+    */
+
+    const numberOfDays =
+
+        new Date(
+            currentYear,
+            currentMonth + 1,
+            0
+        ).getDate();
+
+
+    /*
+        Empty calendar cells before
+        the first day.
+    */
+
+    for (
+        let i = 0;
+        i < firstDay;
+        i++
+    ) {
+
+        const empty =
+            document.createElement(
+                "div"
+            );
+
+
+        empty.className =
+            "day empty";
+
+
+        $("days")
+            .appendChild(
+                empty
+            );
+    }
+
+
+    /*
+        Create every calendar date.
+    */
+
+    for (
+        let day = 1;
+        day <= numberOfDays;
+        day++
+    ) {
+
+        const date =
+
+            currentYear
+            + "-"
+            + pad(
+                currentMonth + 1
+            )
+            + "-"
+            + pad(day);
+
+
+        const element =
+            document.createElement(
+                "div"
+            );
+
+
+        element.className =
+            "day";
+
+
+        element.textContent =
+            day;
+
+
+        /* Today's date */
+
+        if (
+            date ===
+            today()
+        ) {
+
+            element.classList.add(
+                "today"
+            );
+        }
+
+
+        /* Selected date */
+
+        if (
+            date ===
+            selectedDate
+        ) {
+
+            element.classList.add(
+                "selected"
+            );
+        }
+
+
+        /*
+            Add dots when tasks
+            exist on this date.
+        */
+
+        const dayTasks =
+            tasksForDate(
+                date
+            );
+
+
+        if (
+            dayTasks.length
+        ) {
+
+            const dots =
+                document.createElement(
+                    "div"
+                );
+
+
+            dots.className =
+                "dots";
+
+
+            for (
+                let i = 0;
+                i <
+                Math.min(
+                    3,
+                    dayTasks.length
+                );
+                i++
+            ) {
+
+                const dot =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                dot.className =
+                    "dot";
+
+
+                dots.appendChild(
+                    dot
+                );
+            }
+
+
+            element.appendChild(
+                dots
+            );
+        }
+
+
+        /*
+            Select calendar date.
+        */
+
+        element.onclick =
+            function() {
+
+                selectedDate =
+                    date;
+
+
+                renderCalendar();
+
+                renderDay();
+            };
+
+
+        $("days")
+            .appendChild(
+                element
+            );
+    }
+}
+
+
+/* =========================================================
+   9. CREATE TASK CARD
+========================================================= */
+
+function taskCard(
+    task,
+    showDate
+) {
+
+    const card =
+        document.createElement(
+            "article"
+        );
+
+
+    card.className =
+        "task";
+
+
+    if (
+        task.completed
+    ) {
+
+        card.classList.add(
+            "completed"
+        );
+    }
+
+
+    /* Checkbox */
+
+    const checkbox =
+        document.createElement(
+            "input"
+        );
+
+
+    checkbox.type =
+        "checkbox";
+
+
+    checkbox.className =
+        "check";
+
+
+    checkbox.checked =
+        task.completed;
+
+
+    checkbox.onchange =
+        function() {
+
+            setDone(
+
+                task,
+
+                checkbox.checked
+            );
+        };
+
+
+    /* Main task body */
+
+    const body =
+        document.createElement(
+            "div"
+        );
+
+
+    body.className =
+        "task-body";
+
+
+    /*
+        List pages show the task date.
+    */
+
+    if (
+        showDate
+    ) {
+
+        const date =
+            document.createElement(
+                "div"
+            );
+
+
+        date.className =
+            "date-label";
+
+
+        date.textContent =
+            readable(
+                task.date
+            );
+
+
+        body.appendChild(
+            date
+        );
+    }
+
+
+    /* Title */
+
+    const title =
+        document.createElement(
+            "h3"
+        );
+
+
+    title.className =
+        "task-title";
+
+
+    title.textContent =
+        task.title;
+
+
+    body.appendChild(
+        title
+    );
+
+
+    /* Description */
+
+    const description =
+        document.createElement(
+            "p"
+        );
+
+
+    description.className =
+        "desc";
+
+
+    description.textContent =
+        task.description ||
+        "No description";
+
+
+    body.appendChild(
+        description
+    );
+
+
+    /* Badges */
+
+    const badges =
+        document.createElement(
+            "div"
+        );
+
+
+    badges.className =
+        "badges";
+
+
+    const badgeData = [
+
+        [
+            "🕒 "
+            + formatTime(
+                task.time
+            ),
+
+            ""
+        ],
+
+        [
+            task.category,
+
+            ""
+        ],
+
+        [
+            task.priority
+            + " Priority",
+
+            task.priority
+                .toLowerCase()
+        ]
+    ];
+
+
+    /*
+        Show recurring badge.
+    */
+
+    if (
+        task.repeat !==
+        "none"
+    ) {
+
+        badgeData.push(
+            [
+
+                "↻ "
+                +
+                task.repeat
+                    .charAt(0)
+                    .toUpperCase()
+
+                +
+
+                task.repeat.slice(1),
+
+                "repeat"
+            ]
+        );
+    }
+
+
+    badgeData.forEach(
+        item => {
+
+            const badge =
+                document.createElement(
+                    "span"
+                );
+
+
+            badge.className =
+                "badge "
+                + item[1];
+
+
+            badge.textContent =
+                item[0];
+
+
+            badges.appendChild(
+                badge
+            );
+        }
+    );
+
+
+    body.appendChild(
+        badges
+    );
+
+
+    /* Action buttons */
+
+    const actions =
+        document.createElement(
+            "div"
+        );
+
+
+    actions.className =
+        "actions";
+
+
+    const edit =
+        document.createElement(
+            "button"
+        );
+
+
+    edit.textContent =
+        "Edit";
+
+
+    edit.onclick =
+        function() {
+
+            openEdit(
+                task.originalTask
+            );
+        };
+
+
+    const deleteButton =
+        document.createElement(
+            "button"
+        );
+
+
+    deleteButton.textContent =
+        "Delete";
+
+
+    deleteButton.className =
+        "delete";
+
+
+    deleteButton.onclick =
+        function() {
+
+            deleteTask(
+                task.originalTask
+            );
+        };
+
+
+    actions.append(
+        edit,
+        deleteButton
+    );
+
+
+    card.append(
+        checkbox,
+        body,
+        actions
+    );
+
+
+    return card;
+}
+
+
+/* =========================================================
+   10. COMPLETE TASK
+========================================================= */
+
+function setDone(
+    occurrenceTask,
+    value
+) {
+
+    const task =
+        occurrenceTask
+            .originalTask;
+
+
+    /*
+        Normal task.
+    */
+
+    if (
+        task.repeat ===
+        "none"
+    ) {
+
+        task.completed =
+            value;
+    }
+
+
+    /*
+        Recurring task.
+
+        Save completion only for
+        this occurrence date.
+    */
+
+    else {
+
+        task.completedDates =
+
+            Array.isArray(
+                task.completedDates
+            )
+
+            ?
+
+            task.completedDates
+
+            :
+
+            [];
+
+
+        const date =
+            occurrenceTask
+                .occurrenceDate;
+
+
+        /*
+            Complete occurrence.
+        */
+
+        if (
+            value
+
+            &&
+
+            !task.completedDates
+                .includes(date)
+        ) {
+
+            task.completedDates
+                .push(
+                    date
+                );
+        }
+
+
+        /*
+            Uncomplete occurrence.
+        */
+
+        if (
+            !value
+        ) {
+
+            task.completedDates =
+
+                task.completedDates
+                    .filter(
+                        item =>
+                            item !==
+                            date
+                    );
+        }
+    }
+
+
+    saveTasks();
+
+    refresh();
+}
+
+
+/* =========================================================
+   11. SELECTED DATE TASKS
+========================================================= */
+
+function renderDay() {
+
+    $("selectedHeading")
+        .textContent =
+        readable(
+            selectedDate
+        );
+
+
+    /*
+        Get tasks for selected date,
+        then apply active filters.
+    */
+
+    let selectedTasks =
+
+        filters(
+
+            tasksForDate(
+                selectedDate
+            )
+        );
+
+
+    selectedTasks.sort(
+        sortTasks
+    );
+
+
+    const completed =
+
+        selectedTasks.filter(
+            task =>
+                task.completed
+        ).length;
+
+
+    const total =
+        selectedTasks.length;
+
+
+    const percentage =
+
+        total
+
+        ?
+
+        Math.round(
+            completed /
+            total *
+            100
+        )
+
+        :
+
+        0;
+
+
+    $("dailyText")
+        .textContent =
+
+        completed
+        + " of "
+        + total
+        + " tasks completed";
+
+
+    $("dailyPercent")
+        .textContent =
+
+        percentage
+        + "%";
+
+
+    $("dailyFill")
+        .style.width =
+
+        percentage
+        + "%";
+
+
+    $("taskList")
+        .innerHTML =
+        "";
+
+
+    if (
+        !selectedTasks.length
+    ) {
+
+        showEmpty(
+
+            $("taskList"),
+
+            "No tasks for this day"
+        );
+
+
+        return;
+    }
+
+
+    selectedTasks.forEach(
+        task => {
+
+            $("taskList")
+                .appendChild(
+
+                    taskCard(
+                        task,
+                        false
+                    )
+                );
+        }
+    );
+}
+
+
+/* =========================================================
+   12. EMPTY STATE
+========================================================= */
+
+function showEmpty(
+    container,
+    title
+) {
+
+    container.innerHTML = `
+
+        <div class="empty">
+
+            <strong>
+                ${title}
+            </strong>
+
+            <span>
+                Try adding a task or changing your filters.
+            </span>
+
+        </div>
+
+    `;
+}
+
+
+/* =========================================================
+   13. RENDER NAVIGATION VIEW
+========================================================= */
+
+function renderView() {
+
+    /*
+        Calendar page.
+    */
+
+    if (
+        currentView ===
+        "calendar"
+    ) {
+
+        $("calendarView")
+            .style.display =
+            "grid";
+
+
+        $("listView")
+            .style.display =
+            "none";
+
+
+        renderCalendar();
+
+        renderDay();
+
+        return;
+    }
+
+
+    /*
+        List page.
+    */
+
+    $("calendarView")
+        .style.display =
+        "none";
+
+
+    $("listView")
+        .style.display =
+        "block";
+
+
+    let viewTasks = [];
+
+    let title = "";
+
+    let description = "";
+
+
+    /* Today */
+
+    if (
+        currentView ===
+        "today"
+    ) {
+
+        viewTasks =
+            tasksForDate(
+                today()
+            );
+
+
+        title =
+            "Today's Tasks";
+
+
+        description =
+            "Everything scheduled for today.";
+    }
+
+
+    /* All Tasks */
+
+    if (
+        currentView ===
+        "all"
+    ) {
+
+        viewTasks =
+            rangeOccurrences();
+
+
+        title =
+            "All Tasks";
+
+
+        description =
+            "Upcoming recurring occurrences for 90 days, plus one-time tasks.";
+    }
+
+
+    /* Pending */
+
+    if (
+        currentView ===
+        "pending"
+    ) {
+
+        viewTasks =
+
+            rangeOccurrences()
+                .filter(
+                    task =>
+                        !task.completed
+                );
+
+
+        title =
+            "Pending Tasks";
+
+
+        description =
+            "Upcoming tasks that still need your attention.";
+    }
+
+
+    /* Completed */
+
+    if (
+        currentView ===
+        "completed"
+    ) {
+
+        viewTasks =
+            completedOccurrences();
+
+
+        title =
+            "Completed Tasks";
+
+
+        description =
+            "Task occurrences you have completed.";
+    }
+
+
+    $("listTitle")
+        .textContent =
+        title;
+
+
+    $("listDesc")
+        .textContent =
+        description;
+
+
+    /*
+        Apply filters.
+    */
+
+    viewTasks =
+        filters(
+            viewTasks
+        );
+
+
+    viewTasks.sort(
+        sortTasks
+    );
+
+
+    $("listTasks")
+        .innerHTML =
+        "";
+
+
+    if (
+        !viewTasks.length
+    ) {
+
+        showEmpty(
+
+            $("listTasks"),
+
+            "No tasks found"
+        );
+
+
+        return;
+    }
+
+
+    viewTasks.forEach(
+        task => {
+
+            $("listTasks")
+                .appendChild(
+
+                    taskCard(
+                        task,
+                        true
+                    )
+                );
+        }
+    );
+}
+
+
+/* =========================================================
+   14. DASHBOARD STATISTICS
+========================================================= */
+
+function updateStats() {
+
+    const todaysTasks =
+        tasksForDate(
+            today()
+        );
+
+
+    const todayCompleted =
+
+        todaysTasks.filter(
+            task =>
+                task.completed
+        ).length;
+
+
+    const todayPercentage =
+
+        todaysTasks.length
+
+        ?
+
+        Math.round(
+
+            todayCompleted
+
+            /
+
+            todaysTasks.length
+
+            *
+
+            100
+        )
+
+        :
+
+        0;
+
+
+    const upcoming =
+        rangeOccurrences();
+
+
+    const pending =
+
+        upcoming.filter(
+            task =>
+                !task.completed
+        );
+
+
+    const completed =
+        completedOccurrences();
+
+
+    const highPriority =
+
+        upcoming.filter(
+            task =>
+                task.priority ===
+                "High"
+        );
+
+
+    $("statToday")
+        .textContent =
+        todaysTasks.length;
+
+
+    $("statPending")
+        .textContent =
+        pending.length;
+
+
+    $("statCompleted")
+        .textContent =
+        completed.length;
+
+
+    $("statHigh")
+        .textContent =
+        highPriority.length;
+
+
+    $("pendingCount")
+        .textContent =
+        pending.length;
+
+
+    $("completedCount")
+        .textContent =
+        completed.length;
+
+
+    $("todayProgressText")
+        .textContent =
+
+        todayCompleted
+        + " of "
+        + todaysTasks.length
+        + " tasks completed";
+
+
+    $("todayPercent")
+        .textContent =
+
+        todayPercentage
+        + "%";
+
+
+    $("todayFill")
+        .style.width =
+
+        todayPercentage
+        + "%";
+}
+
+
+/* =========================================================
+   15. ADD TASK
+========================================================= */
+
+function openAdd(
+    date
+) {
+
+    editing =
+        null;
+
+
+    $("taskForm")
+        .reset();
+
+
+    $("taskDate")
+        .value =
+        date;
+
+
+    $("priority")
+        .value =
+        "Medium";
+
+
+    $("category")
+        .value =
+        "Work";
+
+
+    $("repeat")
+        .value =
+        "none";
+
+
+    $("modalTitle")
+        .textContent =
+        "Add New Task";
+
+
+    $("saveBtn")
+        .textContent =
+        "Save Task";
+
+
+    $("modal")
+        .classList
+        .add(
+            "show"
+        );
+
+
+    $("title")
+        .focus();
+}
+
+
+/* =========================================================
+   16. EDIT TASK
+========================================================= */
+
+function openEdit(
+    task
+) {
+
+    editing =
+        task;
+
+
+    $("title")
+        .value =
+        task.title;
+
+
+    $("description")
+        .value =
+        task.description;
+
+
+    $("taskDate")
+        .value =
+        task.date;
+
+
+    $("time")
+        .value =
+        task.time;
+
+
+    $("category")
+        .value =
+        task.category;
+
+
+    $("priority")
+        .value =
+        task.priority;
+
+
+    $("repeat")
+        .value =
+        task.repeat;
+
+
+    $("modalTitle")
+        .textContent =
+        "Edit Task";
+
+
+    $("saveBtn")
+        .textContent =
+        "Save Changes";
+
+
+    $("modal")
+        .classList
+        .add(
+            "show"
+        );
+}
+
+
+/* =========================================================
+   17. CLOSE MODAL
+========================================================= */
+
+function closeModal() {
+
+    $("modal")
+        .classList
+        .remove(
+            "show"
+        );
+
+
+    editing =
+        null;
+}
+
+
+/* =========================================================
+   18. DELETE TASK
+========================================================= */
+
+function deleteTask(
+    task
+) {
+
+    let message;
+
+
+    if (
+        task.repeat ===
+        "none"
+    ) {
+
+        message =
+            `Delete "${task.title}"?`;
+
+    } else {
+
+        message =
+            `Delete recurring task "${task.title}" and all occurrences?`;
+    }
+
+
+    if (
+        !confirm(message)
+    ) {
+
+        return;
+    }
+
+
+    tasks =
+        tasks.filter(
+            item =>
+                item.id !==
+                task.id
+        );
+
+
+    saveTasks();
+
+    refresh();
+}
+
+
+/* =========================================================
+   19. SAVE TASK FORM
+========================================================= */
+
+$("taskForm")
+    .onsubmit =
+    function(event) {
+
+        event.preventDefault();
+
+
+        /*
+            Read values from form.
+        */
+
+        const data = {
+
+            title:
+                $("title")
+                    .value
+                    .trim(),
+
+            description:
+                $("description")
+                    .value
+                    .trim(),
+
+            date:
+                $("taskDate")
+                    .value,
+
+            time:
+                $("time")
+                    .value,
+
+            category:
+                $("category")
+                    .value,
+
+            priority:
+                $("priority")
+                    .value,
+
+            repeat:
+                $("repeat")
+                    .value
+        };
+
+
+        /*
+            EDIT TASK
+        */
+
+        if (
+            editing
+        ) {
+
+            const oldRepeat =
+                editing.repeat;
+
+
+            const oldDate =
+                editing.date;
+
+
+            Object.assign(
+                editing,
+                data
+            );
+
+
+            /*
+                If recurring task becomes
+                a normal task, reset old
+                recurring completion dates.
+            */
+
+            if (
+                data.repeat ===
+                "none"
+            ) {
+
+                if (
+                    oldRepeat !==
+                    "none"
+
+                    ||
+
+                    oldDate !==
+                    data.date
+                ) {
+
+                    editing.completed =
+                        false;
+                }
+
+
+                editing.completedDates =
+                    [];
+            }
+
+
+            /*
+                Keep only valid recurring
+                completion dates.
+            */
+
+            else {
+
+                editing.completed =
+                    false;
+
+
+                editing.completedDates =
+
+                    (
+                        editing.completedDates
+                        ||
+                        []
+                    ).filter(
+                        date =>
+                            occurs(
+                                editing,
+                                date
+                            )
+                    );
+            }
+
+        }
+
+
+        /*
+            ADD NEW TASK
+        */
+
+        else {
+
+            tasks.push({
+
+                id:
+                    makeId(),
+
+                ...data,
+
+                completed:
+                    false,
+
+                completedDates:
+                    []
+            });
+        }
+
+
+        /*
+            Select the saved task date
+            in the calendar.
+        */
+
+        selectedDate =
+            data.date;
+
+
+        const selected =
+            parseDate(
+                data.date
+            );
+
+
+        currentMonth =
+            selected.getMonth();
+
+
+        currentYear =
+            selected.getFullYear();
+
+
+        saveTasks();
+
+        closeModal();
+
+        refresh();
+    };
+
+
+/* =========================================================
+   20. PREVIOUS / NEXT MONTH
+========================================================= */
+
+$("prev")
+    .onclick =
+    function() {
+
+        currentMonth--;
+
+
+        if (
+            currentMonth < 0
+        ) {
+
+            currentMonth =
+                11;
+
+            currentYear--;
+        }
+
+
+        renderCalendar();
+    };
+
+
+$("next")
+    .onclick =
+    function() {
+
+        currentMonth++;
+
+
+        if (
+            currentMonth > 11
+        ) {
+
+            currentMonth =
+                0;
+
+            currentYear++;
+        }
+
+
+        renderCalendar();
+    };
+
+
+/* =========================================================
+   21. ADD TASK BUTTONS
+========================================================= */
+
+$("addBtn")
+    .onclick =
+    function() {
+
+        openAdd(
+            selectedDate
+        );
+    };
+
+
+$("listAddBtn")
+    .onclick =
+    function() {
+
+        openAdd(
+            today()
+        );
+    };
+
+
+/* =========================================================
+   22. MODAL BUTTONS
+========================================================= */
+
+$("closeModal")
+    .onclick =
+    closeModal;
+
+
+$("cancel")
+    .onclick =
+    closeModal;
+
+
+/*
+    Clicking outside modal
+    closes it.
+*/
+
+$("modal")
+    .onclick =
+    function(event) {
+
+        if (
+            event.target ===
+            $("modal")
+        ) {
+
+            closeModal();
+        }
+    };
+
+
+/*
+    Escape key closes modal.
+*/
+
+document.addEventListener(
+
+    "keydown",
+
+    function(event) {
+
+        if (
+            event.key ===
+            "Escape"
+        ) {
+
+            closeModal();
+        }
+    }
+);
+
+
+/* =========================================================
+   23. NAVIGATION
+========================================================= */
+
+document
+    .querySelectorAll(
+        "#nav button"
+    )
+    .forEach(
+        button => {
+
+            button.onclick =
+                function() {
+
+                    currentView =
+                        button.dataset.view;
+
+
+                    /*
+                        Remove active class
+                        from every button.
+                    */
+
+                    document
+                        .querySelectorAll(
+                            "#nav button"
+                        )
+                        .forEach(
+                            item =>
+
+                                item.classList
+                                    .remove(
+                                        "active"
+                                    )
+                        );
+
+
+                    /*
+                        Highlight clicked button.
+                    */
+
+                    button
+                        .classList
+                        .add(
+                            "active"
+                        );
+
+
+                    if (
+                        currentView ===
+                        "today"
+                    ) {
+
+                        selectedDate =
+                            today();
+                    }
+
+
+                    renderView();
+                };
+        }
+    );
+
+
+/* =========================================================
+   24. SEARCH + FILTER EVENTS
+========================================================= */
+
+function refreshFilters() {
+
+    if (
+        currentView ===
+        "calendar"
+    ) {
+
+        renderDay();
+
+    } else {
+
+        renderView();
+    }
+}
+
+
+/*
+    Search updates while typing.
+*/
+
+$("search")
+    .addEventListener(
+        "input",
+        refreshFilters
+    );
+
+
+/*
+    Dropdown filters.
+*/
+
+$("categoryFilter")
+    .addEventListener(
+        "change",
+        refreshFilters
+    );
+
+
+$("priorityFilter")
+    .addEventListener(
+        "change",
+        refreshFilters
+    );
+
+
+$("statusFilter")
+    .addEventListener(
+        "change",
+        refreshFilters
+    );
+
+
+$("dateFilter")
+    .addEventListener(
+        "change",
+        refreshFilters
+    );
+
+
+/*
+    Clear all filters.
+*/
+
+$("clearFilters")
+    .onclick =
+    function() {
+
+        $("search").value =
+            "";
+
+        $("categoryFilter").value =
+            "";
+
+        $("priorityFilter").value =
+            "";
+
+        $("statusFilter").value =
+            "";
+
+        $("dateFilter").value =
+            "";
+
+
+        refreshFilters();
+    };
+
+
+/* =========================================================
+   25. LIGHT / DARK MODE
+========================================================= */
+
+/*
+    Restore saved theme.
+*/
+
+if (
+    localStorage.getItem(
+        "dailyTaskCalendarTheme"
+    )
+    ===
+    "dark"
+) {
+
+    document.body
+        .classList
+        .add(
+            "dark"
+        );
+}
+
+
+/*
+    Update button text/icon.
+*/
+
+function themeLabel() {
+
+    const dark =
+        document.body
+            .classList
+            .contains(
+                "dark"
+            );
+
+
+    $("themeIcon")
+        .textContent =
+
+        dark
+        ? "☀"
+        : "☾";
+
+
+    $("themeText")
+        .textContent =
+
+        dark
+        ? "Light"
+        : "Dark";
+}
+
+
+$("themeBtn")
+    .onclick =
+    function() {
+
+        document.body
+            .classList
+            .toggle(
+                "dark"
+            );
+
+
+        const dark =
+            document.body
+                .classList
+                .contains(
+                    "dark"
+                );
+
+
+        localStorage.setItem(
+
+            "dailyTaskCalendarTheme",
+
+            dark
+            ? "dark"
+            : "light"
+        );
+
+
+        themeLabel();
+    };
+
+
+/* =========================================================
+   26. REFRESH APPLICATION
+========================================================= */
+
+function refresh() {
+
+    renderCalendar();
+
+    renderDay();
+
+    updateStats();
+
+    renderView();
+}
+
+
+/* =========================================================
+   27. START APPLICATION
+========================================================= */
+
+themeLabel();
+
+refresh();
+
+</script>
+
+</body>
+</html>
